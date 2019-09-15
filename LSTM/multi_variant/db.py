@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 # pprint library is used to make the output look more pretty
+from pprint import pprint
 
 import datetime
 # connect to MongoDB, change the << MONGODB URL >> to reflect your own connection string
@@ -41,10 +42,15 @@ def get_document(post_id):
 
 def get_symbol(symbol, count=1000):
     # Convert from string to ObjectId:
-    document = list(minutely_commodities.find({'symbol': symbol},
-    {"_id":0, "close":1, "open":1, "high":1, 'low':1, "volume":1})
-    .sort([('_id',-1)]).limit(count))
-    document.reverse()
+    document = list(minutely_commodities
+    .find({'symbol': symbol},
+    {"_id":0, "close":1, "open":1, "high":1, 'low':1, "volume":1, "start_timestamp":1}
+    )
+    .sort([('_id',-1)])#to get the newest docuemnts
+    .limit(count)
+    )
+    # pprint(document)
+    document.reverse()#order from oldest to newest
 
     return document
 
